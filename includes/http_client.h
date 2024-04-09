@@ -13,7 +13,7 @@ namespace cnet {
 class http_client {
 
 public:
-    bool send(http_message& message);
+    void make_request(http_message& message);
 
 
 };
