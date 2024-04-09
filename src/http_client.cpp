@@ -5,4 +5,8 @@
 #include "http_client.h"
 
 namespace cnet {
+    void http_client::make_request(http_message &message)
+    {
+
+    }
 } // cnet
