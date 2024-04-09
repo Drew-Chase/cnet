@@ -5,7 +5,6 @@
 #ifndef HTTP_CLIENT_H
 #define HTTP_CLIENT_H
 
-#include "http_method.h"
 #include "http_message.h"
 
 namespace cnet {
