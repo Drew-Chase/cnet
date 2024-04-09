@@ -8,7 +8,9 @@ target_include_directories(example PRIVATE includes)
 
 add_library(cnet STATIC
         src/http_client.cpp
-        includes/http_client.h)
+        includes/http_client.h
+        includes/http_method.h
+        includes/http_response.h)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/${PROJECT_NAME}")
 set_target_properties(${PROJECT_NAME} PROPERTIES INTERMEDIATE_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/obj/${PROJECT_NAME}")
