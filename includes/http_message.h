@@ -10,6 +10,17 @@
 
 namespace cnet
 {
+    /**
+     * @brief A message representing an HTTP request and response.
+     * This object is used to send and receive HTTP messages.
+     * @code{.cpp}
+     * cnet::http_message message("https://example.com");
+     * @endcode
+     * or if you want a http method other than GET
+     * @code{.cpp}
+     * cnet::http_message message("https://example.com", cnet::http_method::GET);
+     * @endcode
+     */
     struct http_message
     {
         /**
@@ -31,20 +42,17 @@ namespace cnet
          */
         http_method method = GET;
         /**
-         * @brief The `body` variable stores the body of an HTTP message.
+         * @brief The body of the HTTP message.
          *
-         * The `body` variable is of type `std::string` and is a member of the `http_message` struct.
-         * It represents the body content of an HTTP message, such as the request or response body.
+         * This variable represents the body of an HTTP message. It is a string that stores the content of the message body.
          *
-         * To access and manipulate the `body` variable, you can refer to the `http_message` struct.
-         *
-         * Example usage:
-         * ```cpp
-         * http_message message("https://example.com");
-         * message.body = "This is the body content";
-         * ```
+         * Example Usage:
+         * @code{.cpp}
+         * std::string body = "Hello, World!";
+         * @endcode
          *
          * @see http_message
+         * @see http_message.h
          */
         std::string body;
         /**
