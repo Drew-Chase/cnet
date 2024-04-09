@@ -11,7 +11,7 @@ int main()
 {
     cnet::http_client client;
     cnet::http_message message("https://postman-echo.com/get");
-    client.send(message);
+    client.make_request(message);
     if (message.is_sucess())
     {
         std::cout << message.body << std::endl;
