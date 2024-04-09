@@ -7,6 +7,12 @@
 
 namespace cnet
 {
+    /**
+     * @enum http_method
+     * @brief Enumeration of HTTP methods.
+     *
+     * This enumeration defines the various HTTP methods that can be used in an HTTP request.
+     */
     enum http_method
     {
         GET,
