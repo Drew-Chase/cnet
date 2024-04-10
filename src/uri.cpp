@@ -61,6 +61,9 @@ uri::uri(std::string url)
             // "http" or default
             port = HTTP_PORT;
         }
+    } else if (port < MIN_PORT || port > MAX_PORT)
+    {
+        throw std::invalid_argument("Invalid port number");
     }
 
     if (temp.find('?') != std::string::npos)
