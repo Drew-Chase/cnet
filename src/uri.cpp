@@ -8,7 +8,6 @@
 
 #include <stdexcept>
 #include <windows.h>
-#include <pstl/execution_defs.h>
 
 uri::uri(std::string url)
 {
@@ -33,6 +32,37 @@ uri::uri(std::string url)
         host = temp.substr(0, temp.find('/'));
         temp = temp.substr(temp.find('/') + 1);
     }
+
+    if (port == ~0)
+    {
+        if (scheme == "https")
+        {
+            port = 443;
+        } else if (scheme == "ftp")
+        {
+            port = 21;
+        } else if (scheme == "ssh")
+        {
+            port = 22;
+        } else if (scheme == "telnet")
+        {
+            port = 23;
+        } else if (scheme == "smtp")
+        {
+            port = 25;
+        } else if (scheme == "dns")
+        {
+            port = 53;
+        } else if (scheme == "dhcp")
+        {
+            port = 67;
+        } else
+        {
+            // "http" or default
+            port = 80;
+        }
+    }
+
     if (temp.find('?') != std::string::npos)
     {
         path = temp.substr(0, temp.find('?'));
@@ -168,6 +198,10 @@ void uri::add_parameter(const std::string &key, const signed char value)
 
 void uri::set_port(const int port)
 {
+    if (port < MIN_PORT || port > MAX_PORT)
+    {
+        throw std::invalid_argument("Invalid port number");
+    }
     this->port = port;
 }
 
@@ -292,6 +326,27 @@ bool uri::validate_url(const std::string &uri)
     if (const std::string path = uri.substr(colon_pos + 1); path.empty())
     {
         return false;
+    }
+
+    // check the port number
+    if (const size_t port_pos = uri.find(':', colon_pos + 1); port_pos != std::string::npos)
+    {
+        const std::string port = uri.substr(port_pos + 1);
+        if (port.empty())
+        {
+            return false;
+        }
+        for (const char &c: port)
+        {
+            if (!isdigit(c))
+            {
+                return false;
+            }
+        }
+        if (const int port_number = std::stoi(uri.substr(port_pos + 1)); port_number < MIN_PORT || port_number > MAX_PORT)
+        {
+            return false;
+        }
     }
 
     // If there are valid scheme and path, then it's a valid URI
