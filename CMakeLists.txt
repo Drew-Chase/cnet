@@ -14,6 +14,11 @@ add_library(cnet STATIC
         src/uri.cpp
         includes/uri.h)
 
+# link winsock2
+if (WIN32)
+    target_link_libraries(cnet wsock32 ws2_32)
+endif()
+
 # Example
 add_executable(example example/example.cpp
         example/uri-example.cpp) # This is only for testing purposes
