@@ -7,6 +7,16 @@
 #include <map>
 #include <string>
 
+#define MAX_PORT 65535
+#define MIN_PORT 0
+#define HTTP_PORT 80
+#define HTTPS_PORT 443
+#define FTP_PORT 21
+#define SSH_PORT 22
+#define TELNET_PORT 23
+#define SMTP_PORT 25
+#define DNS_PORT 53
+#define DHCP_PORT 67
 
 class uri
 {
@@ -15,7 +25,7 @@ private:
     std::string path = "/";
     std::string scheme = "http";
     std::string fragment; // after #
-    int port = 80;
+    unsigned int port = ~0;
     std::map<std::string, std::string> parameters;
 
 public:
