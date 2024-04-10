@@ -6,7 +6,9 @@
 #define HTTP_RESPONSE_H
 #include <map>
 #include <string>
+#include <utility>
 #include "http_method.h"
+#include "uri.h"
 
 namespace cnet
 {
@@ -36,7 +38,7 @@ namespace cnet
          * @see http_message
          * @see http_method
          */
-        std::string url;
+        uri url;
         /**
          * @brief Represents an HTTP method.
          */
@@ -257,16 +259,49 @@ namespace cnet
          */
         [[nodiscard]] bool is_not_found() const { return status_code == 404; };
         /**
+         * @brief Constructs an http_message object with the specified URL.
+         * This constructor can be used to create an http_message object to send an HTTP request to the specified URL.
          *
+         * @param url The URL to send the request to.
          */
-        explicit http_message(std::string url): url(std::move(url)) {};
+        explicit http_message(std::string url): url(uri(std::move(url))) {};
         /**
-         * @brief Constructs an HTTP message with a URL and HTTP method.
+         * @brief Constructs an HTTP message with the given URL.
          *
-         * @param url The URL for the HTTP request.
-         * @param method The HTTP method to use for the request.
+         * An HTTP message is used to represent an HTTP request or response.
+         * The URL parameter specifies the target of the message.
+         *
+         * @param url The URL of the HTTP message.
          */
-        http_message(std::string url, const http_method method): url(std::move(url)), method(method) {};
+        explicit http_message(uri url): url(std::move(url)) {};
+        /**
+         * @brief Constructs an HTTP message object with the given URL and request method.
+         *
+         * This constructor is used to initialize a message representing an HTTP request or response.
+         *
+         * @param url The URL for the message, as a string.
+         * @param method The HTTP method for the request, as a constant http_method object.
+         *
+         * Example Usage:
+         * @code{.cpp}
+         * http_message message("https://example.com", http_method::GET);
+         * @endcode
+         */
+        http_message(std::string url, const http_method method): url(uri(std::move(url))), method(method) {};
+        /**
+         * @brief Constructs an http_message object with the given URL and HTTP method.
+         *
+         * @param url The URL for the HTTP request or response.
+         * @param method The HTTP method to be used for the message.
+         *
+         * @code{.cpp}
+         * // Example usage:
+         * uri url("https://example.com");
+         * http_message message(url, http_method::GET);
+         * @endcode
+         */
+        http_message(uri url, const http_method method): url(std::move(url)), method(method) {};
+
     };
 }
 
