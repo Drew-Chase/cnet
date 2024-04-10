@@ -16,9 +16,12 @@ namespace cnet
     private:
         tcp_client tcp;
 
+        bool preflight_check(http_message &message);
+
+        static std::string build_http_query(http_message &message);
+
     public:
         void make_request(http_message &message);
-        bool preflight_check(http_message &message);
     };
 } // cnet
 
