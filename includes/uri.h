@@ -339,6 +339,18 @@ public:
     std::map<std::string, std::string> get_parameters();
 
     /**
+     * @brief Retrieves the parameter query string for the uri object.
+     *
+     * This method constructs a parameter query string by concatenating the key-value pairs from the parameters map.
+     * The keys are separated from the values by an equal sign (=), and each key-value pair is separated by an ampersand (&).
+     * The order of the parameters in the query string is reversed compared to the order in the parameters map.
+     * If the parameters map is empty, an empty string is returned.
+     *
+     * @return The parameter query string for the uri object.
+     */
+    std::string get_parameter_query();
+
+    /**
      * @brief Clear all parameters in the URI object.
      *
      * This method clears all parameters in the URI object. It removes all key-value pairs from the parameters container.
