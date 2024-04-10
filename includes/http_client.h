@@ -6,17 +6,18 @@
 #define HTTP_CLIENT_H
 
 #include "http_message.h"
+#include "tcp_client.h"
 
-namespace cnet {
+namespace cnet
+{
+    class http_client
+    {
+    private:
+        tcp_client tcp;
 
-class http_client {
-
-public:
-    void make_request(http_message& message);
-
-
-};
-
+    public:
+        void make_request(http_message &message);
+    };
 } // cnet
 
 #endif //HTTP_CLIENT_H
