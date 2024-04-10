@@ -58,6 +58,31 @@ namespace cnet
          */
         std::string body;
         /**
+         * @brief The Content-Type of an HTTP message.
+         *
+         * This variable stores the Content-Type of an HTTP message. The Content-Type
+         * specifies the media type of the data transmitted in the message body.
+
+         * The Content-Type is a string representation of the media type in the format
+         * `type/subtype`. Examples of Content-Type values include "text/plain",
+         * "application/json", "image/jpeg", etc.
+         */
+        std::string content_type;
+        /**
+         * @brief The length of the content in bytes.
+         *
+         * This variable represents the length of the content in bytes. It is of type unsigned long long, which ensures that it can hold large values. The value is specified in bytes, which is the standard unit for measuring file sizes and network data transfer. The content length is often used in HTTP headers to indicate the length of the message body in requests and responses.
+         *
+         * Example usage:
+         *
+         * @code{.cpp}
+         * unsigned long long content_length = 1024;
+         * @endcode
+         *
+         * The content_length variable is used to store the size of a file or the size of data being transferred over a network. It can be assigned a value using an assignment statement, just like any other variable. The value should be specified in bytes as an unsigned long long integer.
+         */
+        unsigned long long content_length;
+        /**
          * @brief A map to store HTTP headers.
          *
          * This map is used to store the headers of an HTTP message. It uses string keys and string values.
@@ -301,7 +326,6 @@ namespace cnet
          * @endcode
          */
         http_message(uri url, const http_method method): url(std::move(url)), method(method) {};
-
     };
 }
 
