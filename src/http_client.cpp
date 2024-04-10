@@ -25,8 +25,8 @@ namespace cnet
         {
             tcp.send("OPTIONS " + message.url.get_path() + " HTTP/1.1\n\r"
                      "Host:" + message.url.get_host() + "\r\n");
-            std::string response = tcp.receive(4096); // Setting the buffer size to 4KB, this should be overkill for an OPTIONS request, but it's a good size for a buffer.
-
+            const std::string response = tcp.receive(4096); // Setting the buffer size to 4KB, this should be overkill for an OPTIONS request, but it's a good size for a buffer.
+            printf("%s\n", response.c_str());
             return true;
         } catch (...)
         {
