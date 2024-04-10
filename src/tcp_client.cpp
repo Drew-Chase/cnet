@@ -35,14 +35,14 @@ namespace cnet
         client.iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
         if (client.iResult != 0)
         {
-            throw std::runtime_error("WSAStartup failed: " + client.iResult);
+            throw std::runtime_error("WSAStartup failed: " + std::to_string(client.iResult));
         }
         // create socket
         client.sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         if (client.sock == INVALID_SOCKET)
         {
             client.close();
-            throw std::runtime_error("Error at socket(): " + WSAGetLastError());
+            throw std::runtime_error("Error at socket(): " + std::to_string(WSAGetLastError()));
         }
         // Specify the server address and port
         sockaddr_in serverAddr{};
@@ -55,7 +55,7 @@ namespace cnet
         if (client.iResult == SOCKET_ERROR)
         {
             client.close();
-            throw std::runtime_error("Error at connect(): " + WSAGetLastError());
+            throw std::runtime_error("Error at connect(): " + std::to_string(WSAGetLastError()));
         }
 
 
@@ -75,7 +75,7 @@ namespace cnet
         if (iResult = ::send(sock, message.c_str(), static_cast<int>(message.size()), 0); iResult == SOCKET_ERROR)
         {
             close();
-            throw std::runtime_error("Error at send(): " + WSAGetLastError());
+            throw std::runtime_error("Error at send(): " + std::to_string(WSAGetLastError()));
         }
 #else
         // TODO: Implement for unix
