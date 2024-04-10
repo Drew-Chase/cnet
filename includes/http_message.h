@@ -83,6 +83,17 @@ namespace cnet
          */
         unsigned long long content_length;
         /**
+         * @brief The MIME types accepted by the receiver.
+         *
+         * The accept variable is a std::string object that represents the MIME types
+         * accepted by the receiver. This string can contain one or more MIME types
+         * separated by commas. The receiver will interpret this information to determine
+         * which types of data it can process.
+         *
+         * For example, if the accept variable is set to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/
+        std::string accept;
+
+        /**
          * @brief A map to store HTTP headers.
          *
          * This map is used to store the headers of an HTTP message. It uses string keys and string values.
