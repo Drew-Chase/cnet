@@ -8,6 +8,7 @@
 #include "http_message.h"
 #include "tcp_client.h"
 
+
 namespace cnet
 {
     class http_client
@@ -17,6 +18,7 @@ namespace cnet
 
     public:
         void make_request(http_message &message);
+        bool preflight_check(http_message &message);
     };
 } // cnet
 
