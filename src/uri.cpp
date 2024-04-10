@@ -37,29 +37,29 @@ uri::uri(std::string url)
     {
         if (scheme == "https")
         {
-            port = 443;
+            port = HTTPS_PORT;
         } else if (scheme == "ftp")
         {
-            port = 21;
+            port = FTP_PORT;
         } else if (scheme == "ssh")
         {
-            port = 22;
+            port = SSH_PORT;
         } else if (scheme == "telnet")
         {
-            port = 23;
+            port = TELNET_PORT;
         } else if (scheme == "smtp")
         {
-            port = 25;
+            port = SMTP_PORT;
         } else if (scheme == "dns")
         {
-            port = 53;
+            port = DNS_PORT;
         } else if (scheme == "dhcp")
         {
-            port = 67;
+            port = DHCP_PORT;
         } else
         {
             // "http" or default
-            port = 80;
+            port = HTTP_PORT;
         }
     }
 
