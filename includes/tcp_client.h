@@ -4,6 +4,9 @@
 
 #ifndef TCP_CLIENT_H
 #define TCP_CLIENT_H
+#ifdef CNET_TCP_THREADSAFE
+#include <mutex>
+#endif
 #include <string>
 
 namespace cnet
@@ -12,7 +15,12 @@ namespace cnet
     {
     private:
         std::string host;
-        int port;
+        int port = 0;
+        int iResult = 0;
+#ifdef CNET_TCP_THREADSAFE
+        std::mutex mutex;
+#endif
+        unsigned long long sock = ~0; // ~0 is a common way to represent an invalid socket it equals -1 in two's complement
 
     public:
         /**
@@ -34,11 +42,11 @@ namespace cnet
          */
         static tcp_client connect(const std::string &host, int port);
 
-        void send(std::string message);
+        void send(const std::string &message);
 
-        std::string receive();
+        std::string receive(int buffer_size);
 
-        void close();
+        void close() const;
     };
 } // cnet
 
