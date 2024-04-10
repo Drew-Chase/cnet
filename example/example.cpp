@@ -8,5 +8,7 @@ int main()
 {
     test_uri();
 
+
+    system("pause");
     return 0;
 }
