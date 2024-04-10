@@ -264,6 +264,23 @@ std::map<std::string, std::string> uri::get_parameters()
     return parameters;
 }
 
+std::string uri::get_parameter_query()
+{
+    if (!parameters.empty())
+    {
+        std::string query;
+        query += "?";
+        for (auto it = parameters.rbegin(); it != parameters.rend(); ++it) // reverse the order of the parameters.
+        {
+            query += it->first + "=";
+            query += it->second + "&";
+        }
+        query.pop_back();
+        return query;
+    }
+    return "";
+}
+
 void uri::clear_parameters()
 {
     parameters.clear();
@@ -280,16 +297,7 @@ std::string uri::to_string()
         url += host;
     }
     url += path;
-    if (!parameters.empty())
-    {
-        url += "?";
-        for (auto it = parameters.rbegin(); it != parameters.rend(); ++it) // reverse the order of the parameters.
-        {
-            url += it->first + "=";
-            url += it->second + "&";
-        }
-        url.pop_back();
-    }
+    url += get_parameter_query();
     if (!fragment.empty())
     {
         url += "#" + fragment;
