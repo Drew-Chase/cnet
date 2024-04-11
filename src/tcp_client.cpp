@@ -108,38 +108,19 @@ namespace cnet
     std::string tcp_client::receive(const int buffer_size)
     {
 #ifdef  __WIN32
-        // The following code is suggested as an additional checking mechanism.
-        // It checks if the socket is ready for reading.
-        timeval timeout{};
-        timeout.tv_sec = 0; // Zero timeout (poll)
-        timeout.tv_usec = 0;
-        fd_set fds;
-        FD_ZERO(&fds);
-        FD_SET(sock, &fds);
-        if (const int select_result = select(0, &fds, nullptr, nullptr, &timeout); select_result > 0)
+        char recvBuffer[buffer_size];
+        // The socket is ready for reading
+        iResult = recv(sock, recvBuffer, buffer_size, 0);
+        if (iResult > 0)
         {
-            char recvBuffer[buffer_size];
-            // The socket is ready for reading
-            iResult = recv(sock, recvBuffer, buffer_size, 0);
-            if (iResult > 0)
-            {
-                return std::string(recvBuffer, iResult);
-            }
-            if (iResult == 0)
-            {
-                return "";
-            }
-            close();
-            throw std::runtime_error("Error at recv(): " + std::to_string(WSAGetLastError()));
-        } else if (select_result == 0)
-        {
-            // The socket is not ready. Return an empty string or handle this case based on your needs.
-            return "";
-        } else
-        {
-            // There was an error with select()
-            throw std::runtime_error("Error at select(): " + std::to_string(WSAGetLastError()));
+            return std::string(recvBuffer, iResult);
         }
+        if (iResult == 0)
+        {
+            return "";
+        }
+        close();
+        throw std::runtime_error("Error at recv(): " + std::to_string(WSAGetLastError()));
 #else
         // TODO: Implement for unix
 #endif
