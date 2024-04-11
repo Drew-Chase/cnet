@@ -5,23 +5,25 @@
 #include <stdexcept>
 
 #include "http_client.h"
+#include "tcp_client.h"
 #include "uri-example.cpp"
+using namespace cnet;
 
 int main()
 {
     try
     {
-        cnet::http_client client;
-        cnet::http_message message("https://postman-echo.com/get");
+        http_client client;
+        http_message message("https://postman-echo.com/get");
         client.make_request(message);
     } catch (std::runtime_error &e)
     {
         printf("%s\n", e.what());
     }
 
-    test_uri();
+    // test_uri();
 
 
-    system("pause");
+    // system("pause");
     return 0;
 }
