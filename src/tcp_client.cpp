@@ -37,8 +37,29 @@ namespace cnet
         {
             throw std::runtime_error("WSAStartup failed: " + std::to_string(client.iResult));
         }
-        // create socket
-        client.sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+        addrinfo *result = nullptr, hints{};
+        const addrinfo *ptr = nullptr;
+
+        ZeroMemory(&hints, sizeof(hints));
+        hints.ai_family = AF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = IPPROTO_TCP;
+
+        // resolve the server address and port
+        client.iResult = getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &result);
+        if (client.iResult != 0)
+        {
+            client.close();
+            throw std::runtime_error("getaddrinfo failed: " + std::to_string(client.iResult));
+        }
+
+        // Attempt to connect to the first address returned by
+        // the call to getaddrinfo
+        ptr = result;
+
+
+        client.sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
         if (client.sock == INVALID_SOCKET)
         {
             client.close();
@@ -50,8 +71,9 @@ namespace cnet
         serverAddr.sin_port = htons(port);
         serverAddr.sin_addr.s_addr = inet_addr(host.c_str());
 
+
         // Connect to server.
-        client.iResult = ::connect(client.sock, reinterpret_cast<sockaddr *>(&serverAddr), sizeof(serverAddr));
+        client.iResult = ::connect(client.sock, ptr->ai_addr, static_cast<int>(ptr->ai_addrlen));
         if (client.iResult == SOCKET_ERROR)
         {
             client.close();
