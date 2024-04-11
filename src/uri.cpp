@@ -97,6 +97,11 @@ uri::uri(std::string url)
         fragment = path.substr(path.find('#') + 1);
         path = path.substr(0, path.find('#'));
     }
+
+    if(path[0] != '/')
+    {
+        path = "/" + path;
+    }
 }
 
 uri::uri()
