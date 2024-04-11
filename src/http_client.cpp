@@ -23,7 +23,7 @@ namespace cnet
         if (message.url.get_host().empty()) throw std::runtime_error("Host is empty");
         try
         {
-            tcp.send("OPTION " + message.url.get_path() + " HTTP/1.1\n\r"
+            tcp.send("HEAD " + message.url.get_path() + " HTTP/1.1\n\r"
                      "Host:" + message.url.get_host() + "\r\n");
             const std::string response = tcp.receive(4096); // Setting the buffer size to 4KB, this should be overkill for an OPTIONS request, but it's a good size for a buffer.
             printf("%s\n", response.c_str());
