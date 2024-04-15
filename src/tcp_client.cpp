@@ -54,42 +54,54 @@ namespace cnet
             throw std::runtime_error("getaddrinfo failed: " + std::to_string(client.iResult));
         }
 
-        // Attempt to connect to the first address returned by
-        // the call to getaddrinfo
-        ptr = result;
-
-
-        client.sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-        if (client.sock == INVALID_SOCKET)
+        // Attempt to connect to an address until one succeeds
+        for (ptr = result; ptr != nullptr; ptr = ptr->ai_next)
         {
-            client.close();
-            throw std::runtime_error("Error at socket(): " + std::to_string(WSAGetLastError()));
-        }
-        // Specify the server address and port
-        sockaddr_in serverAddr{};
-        serverAddr.sin_family = AF_INET;
-        serverAddr.sin_port = htons(port);
-        serverAddr.sin_addr.s_addr = inet_addr(host.c_str());
+            client.sock = socket(ptr->ai_family, SOCK_STREAM, 0);
+            if (client.sock == INVALID_SOCKET)
+            {
+                WSACleanup();
+                throw std::runtime_error("Error at socket(): " + std::to_string(WSAGetLastError()));
+            }
 
 
-        // Connect to server.
-        client.iResult = ::connect(client.sock, ptr->ai_addr, static_cast<int>(ptr->ai_addrlen));
-        if (client.iResult == SOCKET_ERROR)
-        {
-            client.close();
-            throw std::runtime_error("Error at connect(): " + std::to_string(WSAGetLastError()));
+            // Specify the server address and port
+            // sockaddr_in serverAddr{};
+            // serverAddr.sin_family = AF_INET;
+            // serverAddr.sin_port = htons(port);
+            // serverAddr.sin_addr.s_addr = inet_addr(host.c_str());
+            // if (inet_pton(AF_INET, host.c_str(), &serverAddr.sin_addr) <= 0)
+            // {
+            //     throw std::runtime_error("Invalid address/ Address not supported");
+            // }
+
+
+            // Connect to server.
+            client.iResult = ::connect(client.sock, ptr->ai_addr, static_cast<int>(ptr->ai_addrlen));
+            if (client.iResult == SOCKET_ERROR)
+            {
+                closesocket(client.sock);
+                client.sock = INVALID_SOCKET;
+                continue;
+            }
+            break;
         }
+
+        // no longer need address info for server
+        freeaddrinfo(result);
 
 
 #else
         // TODO: Implement for unix
 #endif
 
+        client.is_open = true;
         return client;
     }
 
     void tcp_client::send(const std::string &message)
     {
+        if (!is_open) throw std::runtime_error("Socket is not open");
 #ifdef CNET_TCP_THREADSAFE
         std::lock_guard lock(mutex);
 #endif
@@ -107,33 +119,48 @@ namespace cnet
 
     std::string tcp_client::receive(const int buffer_size)
     {
+        if (!is_open) throw std::runtime_error("Socket is not open");
+
 #ifdef  __WIN32
+        iResult = shutdown(sock, SD_SEND);
+        if (iResult == SOCKET_ERROR)
+        {
+            close();
+            throw std::runtime_error("Error at shutdown(): " + std::to_string(WSAGetLastError()));
+        }
+
         char recvBuffer[buffer_size];
-        // The socket is ready for reading
-        iResult = recv(sock, recvBuffer, buffer_size, 0);
-        if (iResult > 0)
+        do
         {
-            return std::string(recvBuffer, iResult);
-        }
-        if (iResult == 0)
-        {
-            return "";
-        }
+            iResult = recv(sock, recvBuffer, buffer_size, 0);
+            if (iResult > 0)
+                printf("Bytes received: %d\n", iResult);
+            else if (iResult == 0)
+                printf("Connection closed\n");
+            else
+                printf("recv failed: %d\n", WSAGetLastError());
+        } while (iResult > 0);
+
         close();
-        throw std::runtime_error("Error at recv(): " + std::to_string(WSAGetLastError()));
+
+        return std::string(recvBuffer);
 #else
         // TODO: Implement for unix
 #endif
     }
 
-    void tcp_client::close() const
+    void tcp_client::close()
     {
+        if (!is_open) return;
+        is_open = false;
 #ifdef __WIN32
         if (sock != INVALID_SOCKET)
         {
             closesocket(sock);
+            sock = INVALID_SOCKET;
         }
         WSACleanup();
+
 #else
         // TODO: Implement for unix
 #endif
