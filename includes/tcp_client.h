@@ -14,6 +14,7 @@ namespace cnet
     class tcp_client
     {
     private:
+        bool is_open = false;
         std::string host;
         int port = 0;
         int iResult = 0;
@@ -46,7 +47,7 @@ namespace cnet
 
         std::string receive(int buffer_size);
 
-        void close() const;
+        void close();
     };
 } // cnet
 
