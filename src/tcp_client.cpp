@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <ws2tcpip.h>
 #include <cstdio>
+// #include <openssl/openssl.h>
 #pragma comment(lib, "ws2_32.lib") // Winsock Library
 #else
 #include <arpa/inet.h>
@@ -63,17 +64,6 @@ namespace cnet
                 WSACleanup();
                 throw std::runtime_error("Error at socket(): " + std::to_string(WSAGetLastError()));
             }
-
-
-            // Specify the server address and port
-            // sockaddr_in serverAddr{};
-            // serverAddr.sin_family = AF_INET;
-            // serverAddr.sin_port = htons(port);
-            // serverAddr.sin_addr.s_addr = inet_addr(host.c_str());
-            // if (inet_pton(AF_INET, host.c_str(), &serverAddr.sin_addr) <= 0)
-            // {
-            //     throw std::runtime_error("Invalid address/ Address not supported");
-            // }
 
 
             // Connect to server.
@@ -140,6 +130,8 @@ namespace cnet
             else
                 printf("recv failed: %d\n", WSAGetLastError());
         } while (iResult > 0);
+
+
 
         close();
 
