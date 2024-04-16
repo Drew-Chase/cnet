@@ -12,7 +12,7 @@ using namespace cnet;
 int main()
 {
     tcp_client tcp = tcp_client::connect("google.com", 443);
-    tcp.send("GET /get HTTP/1.1\r\nHost: google.com\r\nConnection: keep-alive\r\nUser-Agent: CNET\r\n\r\n");
+    tcp.send("HEAD / HTTP/1.1\r\nHost: google.com\r\nConnection: keep-alive\r\nUser-Agent: CNET\r\n\r\n");
     const std::string response = tcp.receive(512); // Setting the buffer size to 4KB, this should be overkill for an OPTIONS request, but it's a good size for a buffer.
     tcp.close();
     printf("%s\n", response.c_str());
