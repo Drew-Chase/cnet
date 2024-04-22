@@ -17,8 +17,8 @@ add_library(cnet STATIC
 # CLI
 add_executable(cnet-cli
         cnet-cli/main.cpp
-        cnet-cli/cclip.hpp
 )
+target_include_directories(cnet-cli PUBLIC vendor)
 target_link_libraries(cnet-cli PUBLIC cnet)
 
 
@@ -34,16 +34,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES INTERMEDIATE_DIRECTORY "${PROJE
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "-debug")
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 
+target_compile_options(cnet-cli PRIVATE -Os)
 target_include_directories(cnet PUBLIC includes)
 
-# Check if the configuration is Release
-if (CMAKE_BUILD_TYPE MATCHES Release)
-    message("Release mode")
-    target_compile_options(cnet PUBLIC -O3)
-    target_compile_options(cnet PUBLIC -s)
-endif ()
-
 # Include VCPKG
-find_package(OpenSSL REQUIRED)
-target_link_libraries(cnet PUBLIC OpenSSL::SSL)
-target_link_libraries(cnet PUBLIC OpenSSL::Crypto)
+#find_package(OpenSSL REQUIRED)
+#target_link_libraries(cnet PUBLIC OpenSSL::SSL)
+#target_link_libraries(cnet PUBLIC OpenSSL::Crypto)
