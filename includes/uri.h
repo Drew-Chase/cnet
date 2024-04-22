@@ -321,7 +321,7 @@ namespace cnet
          *
          * @return The port number.
          */
-        [[nodiscard]] int get_port() const;
+        [[nodiscard]] unsigned int get_port() const;
 
         /**
          * Get the fragment of the URI.
