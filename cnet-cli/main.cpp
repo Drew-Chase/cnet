@@ -4,12 +4,13 @@
 
 
 #include <cstdio>
-#include "cclip.hpp"
+#include "ANSIConsoleColors/ANSIConsoleColors.h"
+#include "cclip/cclip.hpp"
 #include "uri.h"
+using namespace colors;
 
 int main(const int argc, char *argv[])
 {
-    printf("Hello world");
     cclip::options_manager options_manager("cnet (C++ Networking Library)");
     options_manager.add_option("h", "help", "Prints this message", false, false);
     options_manager.add_option("u", "url", "Sets the url of the interaction", false, true);
@@ -30,14 +31,12 @@ int main(const int argc, char *argv[])
             const auto url = options_manager.get_option("u")->argument;
             if (cnet::uri uri; cnet::uri::try_create(url, uri))
             {
-                printf("✅ URI is valid: %s", uri.to_string().c_str());
+                printf("%sURI is VALID:%s %s\n", ConsoleColors::GetColorCode(ColorCodes::Green).c_str(), ConsoleColors::GetColorCode(ColorCodes::Yellow).c_str(), url);
             } else
             {
-                printf("❌ URI is invalid: %s", url);
+                printf("%sURI is INVALID:%s %s\n", ConsoleColors::GetColorCode(ColorCodes::Red).c_str(), ConsoleColors::GetColorCode(ColorCodes::Yellow).c_str(), url);
             }
+            ConsoleColors::ResetConsoleColor();
         }
     }
-
-
-    return 0;
 }
