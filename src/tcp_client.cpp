@@ -132,12 +132,12 @@ namespace cnet
         } while (iResult > 0);
 
 
-
         close();
-
-        return std::string(recvBuffer);
+        return {recvBuffer};
 #else
         // TODO: Implement for unix
+
+        return "";
 #endif
     }
 
@@ -157,4 +157,4 @@ namespace cnet
         // TODO: Implement for unix
 #endif
     }
-} // cnet
+}
