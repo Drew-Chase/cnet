@@ -1,0 +1,6 @@
+[submodule "vendor/cclip"]
+	path = vendor/cclip
+	url = https://github.com/drew-chase/cclip
+[submodule "vendor/ANSIConsoleColors"]
+	path = vendor/ANSIConsoleColors
+	url = https://github.com/drew-chase/ANSIConsoleColors
