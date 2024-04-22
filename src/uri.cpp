@@ -5,9 +5,7 @@
 #include <utility>
 
 #include "../includes/uri.h"
-
 #include <stdexcept>
-#include <windows.h>
 
 namespace cnet
 {
@@ -31,7 +29,13 @@ namespace cnet
             temp = temp.substr(temp.find('/') + 1);
         } else
         {
-            host = temp.substr(0, temp.find('/'));
+            if (temp.find('/') != std::string::npos)
+                host = temp.substr(0, temp.find('/'));
+            else
+            {
+                host = temp;
+                temp = temp.substr(0, temp.find(host));
+            }
             temp = temp.substr(temp.find('/') + 1);
         }
 
@@ -256,7 +260,7 @@ namespace cnet
         return scheme;
     }
 
-    int uri::get_port() const
+    unsigned int uri::get_port() const
     {
         return port;
     }
@@ -296,12 +300,9 @@ namespace cnet
     std::string uri::to_string()
     {
         std::string url = scheme + "://" + host;
-        if (port != 80)
+        if (port != 80 && port != 443)
         {
             url += ":" + std::to_string(port);
-        } else
-        {
-            url += host;
         }
         url += path;
         url += get_parameter_query();
