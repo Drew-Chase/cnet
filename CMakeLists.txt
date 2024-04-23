@@ -38,4 +38,6 @@ target_compile_options(cnet-cli PRIVATE -Os)
 target_include_directories(cnet PUBLIC includes)
 
 # Include OpenSSL
-target_include_directories(cnet PUBLIC vendor/openssl/include)
+find_package(OpenSSL REQUIRED)
+target_link_libraries(main PRIVATE OpenSSL::SSL)
+target_link_libraries(main PRIVATE OpenSSL::Crypto)
