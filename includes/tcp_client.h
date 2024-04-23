@@ -14,23 +14,15 @@ namespace cnet
 {
     class tcp_client
     {
-    private:
+    protected:
         bool is_open = false;
         std::string host;
         int port = 0;
         int iResult = 0;
         unsigned long long sock = ~0; // ~0 is a common way to represent an invalid socket it equals -1 in two's complement
-        SSL_CTX* sslContext = nullptr;
-        SSL * ssl;
-
-        void set_up_ssl_context();
-        SSL* create_ssl_socket();
-        std::string ssl_read(SSL* sslSocket);
-        void ssl_write(SSL* sslSocket, const std::string &message);
 #ifdef CNET_TCP_THREADSAFE
         std::mutex mutex;
 #endif
-
 
     public:
         /**
@@ -51,13 +43,14 @@ namespace cnet
          * @return A TCP client object that represents the established connection.
          */
         static tcp_client connect(const std::string &host, int port);
-        ~tcp_client();
 
         void send(const std::string &message);
 
         std::string receive(int buffer_size);
 
         void close();
+
+        [[nodiscard]] unsigned long long get_sock() const { return sock; }
     };
 } // cnet
 
