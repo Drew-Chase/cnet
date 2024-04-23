@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(cnet VERSION 0.0.1)
 project(cnet-cli VERSION 0.0.1)
+project(cnet VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 17)
 
 
@@ -37,7 +37,5 @@ set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-${
 target_compile_options(cnet-cli PRIVATE -Os)
 target_include_directories(cnet PUBLIC includes)
 
-# Include VCPKG
-#find_package(OpenSSL REQUIRED)
-#target_link_libraries(cnet PUBLIC OpenSSL::SSL)
-#target_link_libraries(cnet PUBLIC OpenSSL::Crypto)
+# Include OpenSSL
+target_include_directories(cnet PUBLIC vendor/openssl/include)
