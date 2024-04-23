@@ -21,6 +21,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #endif
+#include "openssl/ssl.h.in"
 
 namespace cnet
 {
@@ -86,7 +87,14 @@ namespace cnet
 #endif
 
         client.is_open = true;
+        SSL_set_fd(client.ssl, client.sock);
         return client;
+    }
+
+    tcp_client::~tcp_client()
+    {
+        SSL_free(this->ssl);
+        SSL_CTX_free(this->sslContext);
     }
 
     void tcp_client::send(const std::string &message)
@@ -158,3 +166,4 @@ namespace cnet
 #endif
     }
 }
+
