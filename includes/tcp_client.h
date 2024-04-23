@@ -8,6 +8,7 @@
 #include <mutex>
 #endif
 #include <string>
+#include "openssl/ssl3.h"
 
 namespace cnet
 {
@@ -18,10 +19,18 @@ namespace cnet
         std::string host;
         int port = 0;
         int iResult = 0;
+        unsigned long long sock = ~0; // ~0 is a common way to represent an invalid socket it equals -1 in two's complement
+        SSL_CTX* sslContext = nullptr;
+        SSL * ssl;
+
+        void set_up_ssl_context();
+        SSL* create_ssl_socket();
+        std::string ssl_read(SSL* sslSocket);
+        void ssl_write(SSL* sslSocket, const std::string &message);
 #ifdef CNET_TCP_THREADSAFE
         std::mutex mutex;
 #endif
-        unsigned long long sock = ~0; // ~0 is a common way to represent an invalid socket it equals -1 in two's complement
+
 
     public:
         /**
@@ -42,6 +51,7 @@ namespace cnet
          * @return A TCP client object that represents the established connection.
          */
         static tcp_client connect(const std::string &host, int port);
+        ~tcp_client();
 
         void send(const std::string &message);
 
