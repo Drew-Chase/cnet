@@ -4,3 +4,6 @@
 [submodule "vendor/ANSIConsoleColors"]
 	path = vendor/ANSIConsoleColors
 	url = https://github.com/drew-chase/ANSIConsoleColors
+[submodule "vendor/openssl"]
+	path = vendor/openssl
+	url = https://github.com/openssl/openssl
