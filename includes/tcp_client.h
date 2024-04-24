@@ -17,14 +17,14 @@ namespace cnet
     protected:
         bool is_open = false;
         std::string host;
-        int port = 0;
+        unsigned int port = 0;
         int iResult = 0;
         unsigned long long sock = ~0; // ~0 is a common way to represent an invalid socket it equals -1 in two's complement
         void create_ssl_handshake();
 
         void write_ssl(const std::string &message) const;
 
-        std::string read_ssl(int buffer_size) const;
+        [[nodiscard]] std::string read_ssl(const unsigned long long buffer_size) const;
 
         SSL_CTX *ssl_context = nullptr;
         SSL *ssl = nullptr;
@@ -50,11 +50,11 @@ namespace cnet
          *
          * @return A TCP client object that represents the established connection.
          */
-        static tcp_client connect(const std::string &host, int port);
+        static tcp_client connect(const std::string &host, const unsigned int port);
 
         void send(const std::string &message);
 
-        std::string receive(int buffer_size);
+        std::string receive(const unsigned long long buffer_size);
 
         void close();
 
