@@ -26,19 +26,22 @@ target_include_directories(${PROJECT_NAME} PUBLIC includes)
 
 # link winsock2
 if (WIN32)
-    target_link_libraries(cnet PUBLIC wsock32 ws2_32)
+    target_link_libraries(${PROJECT_NAME} PUBLIC wsock32 ws2_32)
 endif ()
 
 
 # Properties
-set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/${PROJECT_NAME}")
-set_target_properties(${PROJECT_NAME} PROPERTIES INTERMEDIATE_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/obj/${PROJECT_NAME}")
-set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "-debug")
-set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+set_target_properties(cnet-cli PROPERTIES INTERMEDIATE_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/obj/${PROJECT_NAME}")
+set_target_properties(cnet-cli PROPERTIES DEBUG_POSTFIX "-debug")
+set_target_properties(cnet-cli PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/${PROJECT_NAME}")
+set_target_properties(cnet-cli PROPERTIES OUTPUT_NAME "cnet-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 
-target_compile_options(cnet-cli PRIVATE -Os)
+target_compile_options(${PROJECT_NAME} PRIVATE -Oz)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -static pthread")
+
 
 # Include OpenSSL
+set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenSSL::SSL)
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenSSL::Crypto)
