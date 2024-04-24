@@ -75,7 +75,7 @@ int main(const int argc, char *argv[])
         {
             try
             {
-                message.method = cnet::parse_http_method(method);
+                message.method = cnet::strto_http_method(method);
             } catch (std::runtime_error &e)
             {
                 fprintf(stderr, "%s%s%s\n", ConsoleColors::GetColorCode(ColorCodes::Red).c_str(), e.what(), ConsoleColors::GetColorCode(ColorCodes::Default).c_str());
