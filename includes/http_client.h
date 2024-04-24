@@ -15,8 +15,10 @@ namespace cnet
     {
     private:
         tcp_client tcp;
+        http_message message;
 
-        bool preflight_check(http_message &message);
+        bool preflight_check();
+        void parse_headers(std::string body);
 
         static std::string build_http_query(http_message &message);
 
