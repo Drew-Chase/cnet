@@ -20,7 +20,8 @@ add_executable(cnet-cli
         cnet-cli/main.cpp
 )
 target_link_libraries(cnet-cli PUBLIC cnet)
-target_include_directories(cnet-cli PUBLIC vendor)
+target_include_directories(${PROJECT_NAME} PUBLIC vendor)
+target_include_directories(${PROJECT_NAME} PUBLIC includes)
 
 
 # link winsock2
@@ -36,7 +37,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "-debug")
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 
 target_compile_options(cnet-cli PRIVATE -Os)
-#target_include_directories(cnet-cli PUBLIC includes)
 
 # Include OpenSSL
 find_package(OpenSSL REQUIRED)
