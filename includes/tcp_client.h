@@ -20,6 +20,14 @@ namespace cnet
         int port = 0;
         int iResult = 0;
         unsigned long long sock = ~0; // ~0 is a common way to represent an invalid socket it equals -1 in two's complement
+        void create_ssl_handshake();
+
+        void write_ssl(const std::string &message) const;
+
+        std::string read_ssl(int buffer_size) const;
+
+        SSL_CTX *ssl_context = nullptr;
+        SSL *ssl = nullptr;
 #ifdef CNET_TCP_THREADSAFE
         std::mutex mutex;
 #endif
