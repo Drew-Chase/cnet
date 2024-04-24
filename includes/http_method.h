@@ -27,7 +27,33 @@ namespace cnet
         CONNECT,
     };
 
-    static http_method parse_http_method(std::string method)
+    static std::string http_method_to_str(const http_method method)
+    {
+        switch (method)
+        {
+            case http_method::GET:
+                return "GET";
+            case http_method::POST:
+                return "POST";
+            case http_method::PUT:
+                return "PUT";
+            case http_method::DELETE:
+                return "DELETE";
+            case http_method::HEAD:
+                return "HEAD";
+            case http_method::OPTIONS:
+                return "OPTIONS";
+            case http_method::PATCH:
+                return "PATCH";
+            case http_method::TRACE:
+                return "TRACE";
+            case http_method::CONNECT:
+                return "CONNECT";
+        }
+        throw std::runtime_error("Invalid HTTP method");
+    }
+
+    static http_method strto_http_method(std::string method)
     {
         // convert method to uppercase
         for (char &c: method)
