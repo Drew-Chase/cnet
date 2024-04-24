@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CMakeSharedSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" ENABLED="true" GENERATION_DIR="bin/obj/cmake/debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=C:\Users\drew.chase\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-mingw-dynamic">
+      <configuration PROFILE_NAME="Debug" ENABLED="true" GENERATION_DIR="bin/obj/cmake/debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=D:\SDKS\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-mingw-dynamic">
         <ADDITIONAL_GENERATION_ENVIRONMENT>
           <envs>
             <env name="VCPKG_DEFAULT_TRIPLET" value="x64-mingw-dynamic" />
@@ -10,7 +10,7 @@
           </envs>
         </ADDITIONAL_GENERATION_ENVIRONMENT>
       </configuration>
-      <configuration PROFILE_NAME="Release" ENABLED="true" GENERATION_DIR="bin/obj/cmake/release" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=C:\Users\drew.chase\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-mingw-static">
+      <configuration PROFILE_NAME="Release" ENABLED="true" GENERATION_DIR="bin/obj/cmake/release" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=D:\SDKS\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-mingw-static">
         <ADDITIONAL_GENERATION_ENVIRONMENT>
           <envs>
             <env name="VCPKG_DEFAULT_TRIPLET" value="x64-mingw-static" />
@@ -18,8 +18,8 @@
           </envs>
         </ADDITIONAL_GENERATION_ENVIRONMENT>
       </configuration>
-      <configuration PROFILE_NAME="Release-WSL" ENABLED="true" GENERATION_DIR="bin/obj/cmake/release-wsl" CONFIG_NAME="Release" TOOLCHAIN_NAME="WSL" />
-      <configuration PROFILE_NAME="Debug-WSL" ENABLED="true" GENERATION_DIR="bin/obj/cmake/debug-wsl" CONFIG_NAME="Debug" TOOLCHAIN_NAME="WSL" />
+      <configuration PROFILE_NAME="Release-WSL" ENABLED="false" GENERATION_DIR="bin/obj/cmake/release-wsl" CONFIG_NAME="Release" TOOLCHAIN_NAME="WSL" />
+      <configuration PROFILE_NAME="Debug-WSL" ENABLED="false" GENERATION_DIR="bin/obj/cmake/debug-wsl" CONFIG_NAME="Debug" TOOLCHAIN_NAME="WSL" />
     </configurations>
   </component>
 </project>
