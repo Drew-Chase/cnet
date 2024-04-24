@@ -21,6 +21,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #endif
+#include <iostream>
+
 #include "openssl/ssl.h"
 #include "openssl/err.h"
 
@@ -61,13 +63,45 @@ namespace cnet
     std::string tcp_client::read_ssl(const unsigned long long buffer_size) const
     {
         char buffer[buffer_size];
-        memset(buffer, 0, buffer_size); // zero out the buffer (clears any previous data)
         if (SSL_read(ssl, buffer, static_cast<int>(buffer_size)) <= 0)
         {
             ERR_print_errors_fp(stderr);
             throw std::runtime_error("Failed to read from SSL connection");
         }
         return {buffer};
+    }
+
+    std::string tcp_client::read_ssl_until_eof() const
+    {
+        std::string response;
+        constexpr unsigned long long buffer_size = 4096;
+        char buffer[buffer_size] = {};
+        while (true)
+        {
+            memset(buffer, 0, buffer_size); // zero out the buffer (clears any previous data)
+            const int bytes = SSL_read(ssl, buffer, buffer_size);
+            if (bytes <= 0)
+            {
+                if (bytes < 0)
+                {
+                    ERR_print_errors_fp(stderr);
+                    throw std::runtime_error("Failed to read from SSL connection");
+                }
+                // The read operation returned 0, indicating that we have reached the EOF.
+                break;
+            }
+
+            // Append only the part of buffer that was filled
+            response.append(buffer, bytes);
+            // check if the response ends with \r\n\r\n
+            std::cout << response.substr(response.size() - 4) << std::endl;
+            if (response.size() >= 4 && response.substr(response.size() - 4) == "\r\n\r\n" || response.find("\r\n\r\n") != std::string::npos)
+            {
+                break;
+            }
+        }
+
+        return response;
     }
 
     tcp_client tcp_client::connect(const std::string &host, const unsigned int port)
@@ -132,8 +166,6 @@ namespace cnet
 #endif
 
         client.is_open = true;
-        if (port == 443)
-            client.create_ssl_handshake();
         return client;
     }
 
@@ -141,11 +173,6 @@ namespace cnet
     void tcp_client::send(const std::string &message)
     {
         if (!is_open) throw std::runtime_error("Socket is not open");
-        if (port == 443)
-        {
-            write_ssl(message);
-            return;
-        }
 #ifdef CNET_TCP_THREADSAFE
         std::lock_guard lock(mutex);
 #endif
@@ -164,11 +191,6 @@ namespace cnet
     std::string tcp_client::receive(const unsigned long long buffer_size)
     {
         if (!is_open) throw std::runtime_error("Socket is not open");
-
-        if (port == 443 && ssl_context != nullptr)
-        {
-            return read_ssl(buffer_size);
-        }
 
 #ifdef  __WIN32
         iResult = shutdown(sock, SD_SEND);
