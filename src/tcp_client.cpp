@@ -58,11 +58,11 @@ namespace cnet
         }
     }
 
-    std::string tcp_client::read_ssl(const int buffer_size) const
+    std::string tcp_client::read_ssl(const unsigned long long buffer_size) const
     {
         char buffer[buffer_size];
         memset(buffer, 0, buffer_size); // zero out the buffer (clears any previous data)
-        if (SSL_read(ssl, buffer, buffer_size) <= 0)
+        if (SSL_read(ssl, buffer, static_cast<int>(buffer_size)) <= 0)
         {
             ERR_print_errors_fp(stderr);
             throw std::runtime_error("Failed to read from SSL connection");
@@ -70,7 +70,7 @@ namespace cnet
         return {buffer};
     }
 
-    tcp_client tcp_client::connect(const std::string &host, const int port)
+    tcp_client tcp_client::connect(const std::string &host, const unsigned int port)
     {
         tcp_client client;
         client.host = host;
@@ -161,7 +161,7 @@ namespace cnet
     }
 
 
-    std::string tcp_client::receive(const int buffer_size)
+    std::string tcp_client::receive(const unsigned long long buffer_size)
     {
         if (!is_open) throw std::runtime_error("Socket is not open");
 
