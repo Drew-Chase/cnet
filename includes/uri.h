@@ -1,8 +1,4 @@
-﻿//
-// Created by drew.chase on 4/10/2024.
-//
-
-#ifndef URI_H
+﻿#ifndef URI_H
 #define URI_H
 #include <map>
 #include <string>
