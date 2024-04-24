@@ -36,7 +36,7 @@ namespace cnet
 
     std::string http_client::build_http_query(http_message &message)
     {
-        std::string query = message.method + " " + message.url.get_path() + message.url.get_parameter_query() + " HTTP/1.1\n\r"
+        std::string query = http_method_to_str(message.method) + " " + message.url.get_path() + message.url.get_parameter_query() + " HTTP/1.1\n\r"
                             "Host: " + message.url.get_host() + "\r\n";
 
         if (!message.headers.empty())
