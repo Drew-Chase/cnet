@@ -81,7 +81,7 @@ namespace cnet
          *
          * The content_length variable is used to store the size of a file or the size of data being transferred over a network. It can be assigned a value using an assignment statement, just like any other variable. The value should be specified in bytes as an unsigned long long integer.
          */
-        unsigned long long content_length;
+        unsigned long long content_length = 0;
         /**
          * @brief The MIME types accepted by the receiver.
          *
@@ -310,6 +310,9 @@ namespace cnet
          * @param url The URL of the HTTP message.
          */
         explicit http_message(uri url): url(std::move(url)) {};
+
+        http_message() = default;
+
         /**
          * @brief Constructs an HTTP message object with the given URL and request method.
          *
