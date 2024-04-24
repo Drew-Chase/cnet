@@ -5,21 +5,22 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 add_library(cnet STATIC
-        src/http_client.cpp
         includes/http_client.h
         includes/http_method.h
         includes/http_message.h
-        src/tcp_client.cpp
         includes/tcp_client.h
+        includes/uri.h
+        src/tcp_client.cpp
+        src/http_client.cpp
         src/uri.cpp
-        includes/uri.h)
+)
 
 # CLI
 add_executable(cnet-cli
         cnet-cli/main.cpp
 )
-target_include_directories(cnet-cli PUBLIC vendor)
 target_link_libraries(cnet-cli PUBLIC cnet)
+target_include_directories(cnet-cli PUBLIC vendor)
 
 
 # link winsock2
@@ -35,9 +36,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "-debug")
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 
 target_compile_options(cnet-cli PRIVATE -Os)
-target_include_directories(cnet PUBLIC includes)
+#target_include_directories(cnet-cli PUBLIC includes)
 
 # Include OpenSSL
 find_package(OpenSSL REQUIRED)
-target_link_libraries(main PRIVATE OpenSSL::SSL)
-target_link_libraries(main PRIVATE OpenSSL::Crypto)
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenSSL::SSL)
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenSSL::Crypto)
