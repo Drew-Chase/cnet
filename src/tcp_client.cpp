@@ -21,9 +21,55 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #endif
+#include "openssl/ssl.h"
+#include "openssl/err.h"
 
 namespace cnet
 {
+    void tcp_client::create_ssl_handshake()
+    {
+        SSL_library_init();
+        if (ssl_context == nullptr)
+        {
+            SSL_load_error_strings();
+            ssl_context = SSL_CTX_new(SSLv23_client_method());
+
+            if (ssl_context == nullptr)
+            {
+                ERR_print_errors_fp(stderr);
+                throw std::runtime_error("Failed to create SSL context");
+            }
+        }
+        ssl = SSL_new(ssl_context);
+        SSL_set_fd(ssl, static_cast<int>(sock));
+        if (SSL_connect(ssl) == -1)
+        {
+            ERR_print_errors_fp(stderr);
+            throw std::runtime_error("Failed to create SSL connection");
+        }
+    }
+
+    void tcp_client::write_ssl(const std::string &message) const
+    {
+        if (SSL_write(ssl, message.c_str(), static_cast<int>(message.size())) <= 0)
+        {
+            ERR_print_errors_fp(stderr);
+            throw std::runtime_error("Failed to write to SSL connection");
+        }
+    }
+
+    std::string tcp_client::read_ssl(const int buffer_size) const
+    {
+        char buffer[buffer_size];
+        memset(buffer, 0, buffer_size); // zero out the buffer (clears any previous data)
+        if (SSL_read(ssl, buffer, buffer_size) <= 0)
+        {
+            ERR_print_errors_fp(stderr);
+            throw std::runtime_error("Failed to read from SSL connection");
+        }
+        return {buffer};
+    }
+
     tcp_client tcp_client::connect(const std::string &host, const int port)
     {
         tcp_client client;
@@ -86,6 +132,8 @@ namespace cnet
 #endif
 
         client.is_open = true;
+        if (port == 443)
+            client.create_ssl_handshake();
         return client;
     }
 
@@ -93,6 +141,11 @@ namespace cnet
     void tcp_client::send(const std::string &message)
     {
         if (!is_open) throw std::runtime_error("Socket is not open");
+        if (port == 443)
+        {
+            write_ssl(message);
+            return;
+        }
 #ifdef CNET_TCP_THREADSAFE
         std::lock_guard lock(mutex);
 #endif
@@ -111,6 +164,11 @@ namespace cnet
     std::string tcp_client::receive(const int buffer_size)
     {
         if (!is_open) throw std::runtime_error("Socket is not open");
+
+        if (port == 443 && ssl_context != nullptr)
+        {
+            return read_ssl(buffer_size);
+        }
 
 #ifdef  __WIN32
         iResult = shutdown(sock, SD_SEND);
@@ -146,6 +204,22 @@ namespace cnet
     {
         if (!is_open) return;
         is_open = false;
+
+        if (port == 443)
+        {
+            if (ssl != nullptr)
+            {
+                SSL_shutdown(ssl);
+                SSL_free(ssl);
+                ssl = nullptr;
+            }
+            if (ssl_context != nullptr)
+            {
+                SSL_CTX_free(ssl_context);
+                ssl_context = nullptr;
+            }
+        }
+
 #ifdef __WIN32
         if (sock != INVALID_SOCKET)
         {
@@ -159,4 +233,3 @@ namespace cnet
 #endif
     }
 }
-
