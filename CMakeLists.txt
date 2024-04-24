@@ -37,7 +37,7 @@ set_target_properties(cnet-cli PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SO
 set_target_properties(cnet-cli PROPERTIES OUTPUT_NAME "cnet-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Oz)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -static pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -static -lpthread")
 
 
 # Include OpenSSL
