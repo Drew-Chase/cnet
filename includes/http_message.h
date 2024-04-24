@@ -42,7 +42,7 @@ namespace cnet
         /**
          * @brief Represents an HTTP method.
          */
-        http_method method = GET;
+        http_method method = http_method::GET;
         /**
          * @brief The body of the HTTP message.
          *
